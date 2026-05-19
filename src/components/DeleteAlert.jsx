@@ -20,7 +20,7 @@ import { FaTrash } from "react-icons/fa";
     const data = await res.json()
   
     router.push("/rooms");
-    console.log (data)
+    console.log 
       
 
       }
