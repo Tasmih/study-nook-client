@@ -36,7 +36,7 @@ import { FaTrash } from "react-icons/fa";
             <AlertDialog.CloseTrigger />
             <AlertDialog.Header>
               <AlertDialog.Icon status="danger" />
-              <AlertDialog.Heading>Delete project permanently?</AlertDialog.Heading>
+              <AlertDialog.Heading>Delete room permanently?</AlertDialog.Heading>
             </AlertDialog.Header>
             <AlertDialog.Body>
               <p className="text-gray-800">
@@ -49,7 +49,7 @@ import { FaTrash } from "react-icons/fa";
                 Cancel
               </Button>
               <Button onClick={handleDelete} slot="close" variant="danger">
-                Delete Project
+                Delete Room
               </Button>
             </AlertDialog.Footer>
           </AlertDialog.Dialog>

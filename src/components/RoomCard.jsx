@@ -27,11 +27,11 @@ const RoomCard = ({ room }) => {
 
       <div className="relative h-56 w-full overflow-hidden">
         <Image
-          src={image}
-          alt={roomName}
-          fill
-          className="object-cover"
-        />
+  src={image || "/placeholder.png"}
+  alt={roomName}
+  fill
+  className="object-cover"
+/>
 
       
         <div className="absolute top-4 right-4 rounded-full bg-[#0f172a]/90 px-4 py-2 text-sm font-semibold text-[#f5ecd7] backdrop-blur-sm">

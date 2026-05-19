@@ -1,19 +1,18 @@
-'use client'
+"use client";
 
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import Link from "next/link";
 import RoomCard from "@/components/RoomCard";
 
-const RoomPage = () => {
+const Featured = () => {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRooms = async () => {
-      const res = await fetch("http://localhost:5000/room");
+      const res = await fetch("http://localhost:5000/featured");
       const data = await res.json();
       setRooms(data);
-      toast.success("Rooms loaded!");
       setLoading(false);
     };
 
@@ -21,9 +20,25 @@ const RoomPage = () => {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
+    <section className="max-w-7xl mx-auto px-4 py-16">
 
-      <h1 className="text-3xl font-bold text-[#0f172a] mb-6">All Rooms</h1>
+
+      <div className="flex items-center justify-between mb-10">
+        <div>
+          <h2 className="text-3xl font-bold text-[#0f172a]">
+            Available Study Rooms
+          </h2>
+          <p className="text-gray-500 mt-1">
+            Browse our latest study spaces
+          </p>
+        </div>
+        <Link
+          href="/rooms"
+          className="rounded-xl bg-[#0f172a] px-5 py-3 text-sm font-medium text-[#f5ecd7] transition duration-300 hover:bg-[#d8a84f] hover:text-[#0f172a]"
+        >
+          View All Rooms →
+        </Link>
+      </div>
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -33,7 +48,7 @@ const RoomPage = () => {
         </div>
 
       ) : rooms.length === 0 ? (
-        <p className="text-center text-gray-500">No rooms found</p>
+        <p className="text-center text-gray-500 py-10">No rooms available.</p>
 
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -43,8 +58,8 @@ const RoomPage = () => {
         </div>
       )}
 
-    </div>
+    </section>
   );
 };
 
-export default RoomPage;
+export default Featured;

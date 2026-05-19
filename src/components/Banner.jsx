@@ -10,30 +10,29 @@ const Banner = () => {
         backgroundImage: "url('/images/Banner6.png')",
       }}
     >
-      {/* Dark overlay for text readability */}
+      
       <div className="absolute inset-0 bg-black/40"></div>
 
-      {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full">
         <div className="max-w-3xl">
-          {/* Small top label */}
+  
           <p className="mb-4 inline-block rounded-full border border-white/20 bg-white/10 px-4 py-1 text-sm tracking-wide text-[#f5ecd7] backdrop-blur-sm">
             Quiet • Private • Comfortable
           </p>
 
-          {/* Title */}
+      
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-semibold leading-tight text-[#f5ecd7]">
             Find Your Perfect{" "}
             <span className="text-[#d8c08c] italic">Study Room</span>
           </h1>
 
-          {/* Description */}
+          
           <p className="mt-6 max-w-2xl text-base sm:text-lg lg:text-xl leading-8 text-[#dbe4ee]">
             Browse and book quiet, private study rooms in your library.
             List your own room and earn.
           </p>
 
-          {/* Buttons */}
+        
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href="/rooms"
