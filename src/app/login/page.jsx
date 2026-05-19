@@ -18,7 +18,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
 
-const RegisterPage = () => {
+const LoginPage = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -26,11 +26,10 @@ const RegisterPage = () => {
 
     const user = Object.fromEntries(formData.entries());
 
-    const { data, error } = await authClient.signUp.email({
+    const { data, error } = await authClient.signIn.email({
       email: user.email,
       password: user.password,
-      name: user.name,
-      image: user.image,
+      
     });
 
     console.log(data, error);
@@ -58,11 +57,11 @@ const RegisterPage = () => {
 
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-yellow-300">
-            Create Account
+            Log in to your account
           </h1>
 
           <p className="text-white/40 mt-2 text-sm">
-            Join Study Nook and start booking rooms
+            Log in  Study Nook and start booking rooms
           </p>
         </div>
 
@@ -70,31 +69,6 @@ const RegisterPage = () => {
           onSubmit={onSubmit}
           className="flex flex-col gap-5 w-full"
         >
-          <TextField name="name" type="text">
-            <Label className="text-white/70">
-              Name
-            </Label>
-
-            <Input
-              placeholder="Enter your name"
-              className="w-full rounded-xl bg-white/5 border border-yellow-500/20 px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-yellow-400/40 focus:border-yellow-400 transition duration-300"
-            />
-
-            <FieldError />
-          </TextField>
-
-          <TextField name="image" type="text">
-            <Label className="text-white/70">
-              Image URL
-            </Label>
-
-            <Input
-              placeholder="Enter image url"
-              className="w-full rounded-xl bg-white/5 border border-yellow-500/20 px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-yellow-400/40 focus:border-yellow-400 transition duration-300"
-            />
-
-            <FieldError />
-          </TextField>
 
           <TextField
             isRequired
@@ -163,7 +137,7 @@ const RegisterPage = () => {
             className="w-full h-12 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-[#0a0f1e] font-bold hover:scale-[1.02] transition-all duration-300"
             type="submit"
           >
-            Create Account
+          Login
           </Button>
         </Form>
 
@@ -184,21 +158,11 @@ const RegisterPage = () => {
           <FcGoogle size={22} />
           Sign in with Google
         </Button>
-
-        <p className="text-center text-sm text-white/40 mt-6">
-          Already have an account?{" "}
-          <Link
-            href="/login"
-            className="text-yellow-400 hover:text-yellow-300 font-semibold"
-          >
-            Login
-          </Link>
-        </p>
-
+    
       </Card>
     </div>
   );
 };
 
 
-export default RegisterPage;
+export default LoginPage;

@@ -56,4 +56,5 @@ import { FaTrash } from "react-icons/fa";
         </AlertDialog.Container>
       </AlertDialog.Backdrop>
     </AlertDialog>
-  
+  );
+}
