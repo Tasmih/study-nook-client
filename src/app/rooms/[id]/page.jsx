@@ -5,9 +5,19 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import RoomBookingAction from "@/components/RoomBookingActions";
+import { FaArrowAltCircleLeft } from "react-icons/fa";
+import { header } from "framer-motion/client";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+
+
 
 const RoomDetailsPage = async ({ params }) => {
   const { id } = await params;
+  const {token} = await auth.api.getToken({
+    headers:await headers()
+  })
+  console.log(token)
 
   if (!id || id.length !== 24) {
     return (
@@ -19,6 +29,10 @@ const RoomDetailsPage = async ({ params }) => {
 
   const res = await fetch(`http://localhost:5000/room/${id}`, {
     cache: "no-store",
+    headers:{
+      authorization: `Bearer ${token}`
+    }
+    
   });
 
   if (!res.ok) {
@@ -160,7 +174,9 @@ const RoomDetailsPage = async ({ params }) => {
                   href="/rooms"
                   className="rounded-xl border border-[#0f172a]/20 px-6 py-3 text-center bg-yellow-600 font-semibold text-[#0f172a] transition hover:border-[#d8a84f] hover:bg-[#d8a84f]/20"
                 >
-                  Back To All Rooms
+                 <div className="flex gap-2"> <div className="mt-1"><FaArrowAltCircleLeft/></div> Back To All Rooms
+                   
+                  </div>
                 </Link>
    </div>
           </div>

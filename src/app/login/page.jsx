@@ -10,8 +10,17 @@ import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
+import { useEffect } from "react";
 
+
+ 
+
+ 
 const LoginPage = () => {
+  useEffect(() => {
+ document.title = "StudyNook - Login";
+}, []);
+ 
   const router = useRouter();
 
   const onSubmit = async (e) => {
@@ -98,7 +107,7 @@ const LoginPage = () => {
             type="password"
             validate={(value) => {
               if (value.length < 6) {
-                return "Password must be at least 8 characters";
+                return "Password must be at least 6 characters";
               }
 
               if (!/[A-Z]/.test(value)) {

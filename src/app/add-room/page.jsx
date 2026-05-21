@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { Button, Input, Card, Label } from "@heroui/react";
 import {
   Wifi, PenLine, Monitor, Plug, VolumeX, Wind, BookOpen,
@@ -19,28 +20,36 @@ export default function AddRoomPage() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
+    try {
+      const { data: tokenData } = await authClient.token();
 
-    const room = {
-      roomName: formData.get("roomName"),
-      floor: formData.get("floor"),
-      capacity: formData.get("capacity"),
-      hourlyRate: formData.get("hourlyRate"),
-      image: formData.get("image"),
-      description: formData.get("description"),
-      amenities: formData.getAll("amenities"),
-    };
+      const form = e.target;
+      const formData = new FormData(form);
 
-    const res = await fetch("http://localhost:5000/room", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(room),
-    });
+      const room = {
+        roomName: formData.get("roomName"),
+        floor: formData.get("floor"),
+        capacity: formData.get("capacity"),
+        hourlyRate: formData.get("hourlyRate"),
+        image: formData.get("image"),
+        description: formData.get("description"),
+        amenities: formData.getAll("amenities"),
+      };
 
-    const data = await res.json();
-    console.log(data);
+      const res = await fetch("http://localhost:5000/room", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${tokenData.token}`,
+        },
+        body: JSON.stringify(room),
+      });
+
+      const data = await res.json();
+      console.log(data);
+    } catch (err) {
+      console.error(err?.message || err);
+    }
   };
 
   return (

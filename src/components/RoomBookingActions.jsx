@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import { FaArrowAltCircleRight } from "react-icons/fa";
 
 const RoomBookingAction = ({ room, roomId }) => {
   const { data: session, isPending } = authClient.useSession();
@@ -87,13 +88,13 @@ const RoomBookingAction = ({ room, roomId }) => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       {!user ? (
-        <Link
+        <Link 
           href={`/login?redirect=/rooms/${roomId}`}
           className="inline-block rounded-lg bg-[#0f172a] px-5 py-2.5 text-sm font-semibold text-[#f5ecd7] shadow-sm transition duration-300 hover:bg-[#d8a84f] hover:text-[#0f172a]"
         >
-          Login to Book
+          <div className="flex gap-2"> Book Now <div className=""><FaArrowAltCircleRight/></div></div>
         </Link>
       ) : (
         <Button

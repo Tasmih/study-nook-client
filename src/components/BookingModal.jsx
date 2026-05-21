@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiX, FiCalendar, FiClock, FiFileText, FiCheckCircle } from "react-icons/fi";
 import { LuSparkles } from "react-icons/lu";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client"; // ✅ নতুন
 
 const TIME_SLOTS = [
   "08:00","09:00","10:00","11:00","12:00",
@@ -11,7 +12,6 @@ const TIME_SLOTS = [
   "18:00","19:00","20:00",
 ];
 
-// Framer Motion variants
 const backdropVariants = {
   hidden:  { opacity: 0 },
   visible: { opacity: 1 },
@@ -66,9 +66,14 @@ export default function BookingModal({ room, user, onClose }) {
 
     setLoading(true);
     try {
+      const { data: tokenData } = await authClient.token(); 
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${tokenData.token}`, 
+        },
         body: JSON.stringify({
           roomId: room._id,
           roomName: room.roomName,
@@ -102,7 +107,6 @@ export default function BookingModal({ room, user, onClose }) {
 
   return (
     <AnimatePresence>
-      {/* Backdrop */}
       <motion.div
         key="backdrop"
         variants={backdropVariants}
@@ -114,7 +118,6 @@ export default function BookingModal({ room, user, onClose }) {
         style={{ background: "rgba(15,23,42,0.65)", backdropFilter: "blur(4px)" }}
         onClick={onClose}
       >
-        {/* Modal */}
         <motion.div
           key="modal"
           variants={modalVariants}
@@ -125,7 +128,6 @@ export default function BookingModal({ room, user, onClose }) {
           style={{ background: "#fefcf7", border: "1px solid #eadfca" }}
           onClick={(e) => e.stopPropagation()}
         >
-        
           <div
             className="h-1 w-full"
             style={{ background: "linear-gradient(90deg, #d8a84f, #f0c878, #d8a84f)" }}
@@ -160,7 +162,6 @@ export default function BookingModal({ room, user, onClose }) {
               </motion.button>
             </motion.div>
 
-            
             <motion.div
               custom={1}
               variants={fieldVariants}
@@ -181,7 +182,6 @@ export default function BookingModal({ room, user, onClose }) {
               </span>
             </motion.div>
 
-        
             <motion.div
               custom={2}
               variants={fieldVariants}
@@ -208,7 +208,6 @@ export default function BookingModal({ room, user, onClose }) {
               />
             </motion.div>
 
-        
             <motion.div
               custom={3}
               variants={fieldVariants}
@@ -255,7 +254,6 @@ export default function BookingModal({ room, user, onClose }) {
               </div>
             </motion.div>
 
-            
             <motion.div
               custom={4}
               variants={fieldVariants}
@@ -283,7 +281,6 @@ export default function BookingModal({ room, user, onClose }) {
               />
             </motion.div>
 
-            
             <AnimatePresence>
               {hours > 0 && (
                 <motion.div
@@ -312,7 +309,6 @@ export default function BookingModal({ room, user, onClose }) {
               )}
             </AnimatePresence>
 
-    
             <motion.button
               custom={5}
               variants={fieldVariants}
@@ -337,8 +333,8 @@ export default function BookingModal({ room, user, onClose }) {
               ) : (
                 "Confirm Booking →"
               )}
-            </motion.button> 
-            
+            </motion.button>
+
           </div>
         </motion.div>
       </motion.div>

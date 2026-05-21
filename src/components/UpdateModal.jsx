@@ -20,6 +20,9 @@ export function UpdateModal({ room }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+     const {token} = await auth.api.getToken({
+        headers:await headers()
+      })
 
     const formData = new FormData(e.currentTarget);
    
@@ -39,7 +42,8 @@ export function UpdateModal({ room }) {
     const res =await fetch(`http://localhost:5000/room/${_id}`,{
       method:'PATCH',
       headers:{
-        'content-type':'application/json'
+        'content-type':'application/json',
+         authorization: `Bearer ${token}`
       },
       body:JSON.stringify(room)
     })

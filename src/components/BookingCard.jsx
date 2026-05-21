@@ -2,37 +2,40 @@
 
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 export default function BookingCard({ booking }) {
   const [loading, setLoading] = useState(false);
 
-  const handleCancel = async () => {
-    setLoading(true);
+const handleCancel = async () => {
+  setLoading(true);
 
-    try {
-      const res = await fetch(
-        `/api/bookings/${booking._id}/cancel`,
-        {
-          method: "PATCH",
-        }
-      );
+  try {
+    const { data: tokenData } = await authClient.token(); 
 
-      const data = await res.json();
+    const res = await fetch(
+      `http://localhost:5000/bookings/${booking._id}/cancel`, 
+      {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${tokenData ?.token}`,
+        },
+      }
+    );
 
-      if (!res.ok) throw new Error(data.message);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
 
-      toast.success("Booking cancelled");
+    toast.success("Booking cancelled");
+    window.location.reload();
 
-      // optional: UI remove instantly
-      window.location.reload();
-
-    } catch (err) {
-      toast.error(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  } catch (err) {
+    toast.error(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="border p-4 rounded flex justify-between items-center">
       <div>
