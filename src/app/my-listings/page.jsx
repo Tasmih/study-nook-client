@@ -184,7 +184,7 @@ const MyListingsPage = () => {
                  Delete
                </button>
 
-               
+                </div>
 
               </div>
             </motion.div>
