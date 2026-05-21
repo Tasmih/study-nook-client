@@ -250,7 +250,6 @@ const MyBookingsPage = () => {
 
           </div>
 
-        </div>
       )}
 
     </div>
