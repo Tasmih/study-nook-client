@@ -253,7 +253,7 @@ const MyBookingsPage = () => {
         </div>
       )}
 
-    </div>
+    
   );
 };
 
