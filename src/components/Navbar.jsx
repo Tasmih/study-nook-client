@@ -4,21 +4,39 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
-import { Avatar, AvatarFallback, AvatarImage, Button } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import { FiLogOut, FiUser } from "react-icons/fi";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-
   const profileRef = useRef(null);
+  const router = useRouter();
 
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
+
+  const publicMenuItems = [
+    { name: "Home", path: "/" },
+    { name: "Rooms", path: "/rooms" },
+  ];
+
+  const privateMenuItems = [
+    { name: "Home", path: "/" },
+    { name: "Rooms", path: "/rooms" },
+    { name: "Add Room", path: "/add-room" },
+    { name: "My Listings", path: "/my-listings" },
+    { name: "My Bookings", path: "/my-bookings" },
+  ];
+
+  const menuItems = user ? privateMenuItems : publicMenuItems;
 
   const handleSignOut = async () => {
     await authClient.signOut();
     setProfileOpen(false);
     setOpen(false);
+    router.push("/login");
+    router.refresh();
   };
 
   useEffect(() => {
@@ -29,105 +47,111 @@ export default function Navbar() {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <nav className="w-full sticky top-0 z-50 bg-gradient-to-r from-yellow-300 via-gray-700 to-gray-900 text-white px-6 py-4 shadow-xl border-b border-white/10 backdrop-blur-md">
-
       <div className="flex items-center justify-between">
 
-     
         <Link href="/" className="flex items-center">
-          <Image
-            src="/logo_light.png"
-            width={200}
-            height={180}
-            alt="StudyNook"
-            className="object-contain"
-          />
+          <div className="relative w-[120px] h-[60px]">
+            <Image
+              src="/logo_light.png"
+              alt="StudyNook"
+              fill
+              sizes="120px"
+              className="object-contain"
+            />
+          </div>
         </Link>
 
-     
         <div className="hidden md:flex gap-7 items-center text-gray-300 font-medium">
-
-          <Link href="/" className="hover:text-white">Home</Link>
-          <Link href="/rooms" className="hover:text-white">Rooms</Link>
-
-          {user && (
-            <>
-              <Link href="/add-room" className="hover:text-white">
-                Add Room
-              </Link>
-
-              <Link href="/my-listings" className="hover:text-white">
-                My Listings
-              </Link>
-
-              <Link href="/my-bookings" className="hover:text-white">
-                My Bookings
-              </Link>
-            </>
-          )}
+          {menuItems.map((item) => (
+            <Link key={item.name} href={item.path} className="hover:text-white">
+              {item.name}
+            </Link>
+          ))}
         </div>
 
-      
-        <div className="hidden md:flex items-center gap-4 relative" ref={profileRef}>
-
-          {user ? (
+        <div
+          className="hidden md:flex items-center gap-4 relative"
+          ref={profileRef}
+        >
+          {isPending ? (
+            <span className="text-sm text-white/70">Loading...</span>
+          ) : user ? (
             <>
-            
-              <button onClick={() => setProfileOpen(!profileOpen)}>
-                <Avatar>
-                  <AvatarImage referrerPolicy="no-referrer" src={user?.image} />
-                  <AvatarFallback>
-                    {user?.name?.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-              </button>
+              <div className="flex items-center gap-3">
 
-             
-              {profileOpen && (
-                <div className="absolute right-0 top-12 w-52 bg-gray-900 border border-white/10 rounded-lg shadow-lg p-2">
-
-                  <p className="px-3 py-2 text-sm text-gray-400">
-                    {user?.name}
-                  </p>
-
-                  <hr className="border-white/10 my-1" />
-
-                  <Link
-                    href="/my-listings"
-                    className="block px-3 py-2 hover:bg-white/10 rounded"
-                    onClick={() => setProfileOpen(false)}
-                  >
-                    My Listings
-                  </Link>
-
-                  <Link
-                    href="/my-bookings"
-                    className="block px-3 py-2 hover:bg-white/10 rounded"
-                    onClick={() => setProfileOpen(false)}
-                  >
-                    My Bookings
-                  </Link>
-
-                  <button
-                    onClick={handleSignOut}
-                    className="w-full text-left px-3 py-2 text-red-400 hover:bg-white/10 rounded"
-                  >
-                    Logout
-                  </button>
+                <div className="flex items-center gap-1 text-sm text-white">
+                  <FiUser className="text-yellow-300" />
+                  <span>
+                    Hello,{" "}
+                    <span className="font-semibold text-yellow-300">
+                      {user?.name?.split(" ")[0]}
+                    </span>
+                  </span>
                 </div>
-              )}
 
-              <Button
-                color="danger"
-                className="ml-2"
-                onClick={handleSignOut}
+                <button onClick={() => setProfileOpen(!profileOpen)}>
+                  <img
+                    src={
+                      user.image ||
+                      "https://i.ibb.co.com/5xWzYz9/user-placeholder.png"
+                    }
+                    alt={user.name || "User"}
+                    className="h-9 w-9 rounded-full border-2 border-yellow-300 object-cover"
+                  />
+                </button>
+              </div>
+
+              <div
+                className={`absolute right-0 top-12 w-56 bg-gray-900 border border-white/10 rounded-lg shadow-lg p-2 z-50 transform transition-all duration-200 origin-top ${
+                  profileOpen
+                    ? "scale-100 opacity-100"
+                    : "scale-95 opacity-0 pointer-events-none"
+                }`}
               >
-                Logout
-              </Button>
+                <p className="px-3 py-2 text-sm text-gray-400">
+                  {user?.name}
+                </p>
+
+                <hr className="border-white/10 my-1" />
+
+                <Link
+                  href="/my-listings"
+                  className="block px-3 py-2 hover:bg-white/10 rounded"
+                  onClick={() => setProfileOpen(false)}
+                >
+                  My Listings
+                </Link>
+
+                <Link
+                  href="/my-bookings"
+                  className="block px-3 py-2 hover:bg-white/10 rounded"
+                  onClick={() => setProfileOpen(false)}
+                >
+                  My Bookings
+                </Link>
+
+                <Link
+                  href="/add-room"
+                  className="block px-3 py-2 hover:bg-white/10 rounded"
+                  onClick={() => setProfileOpen(false)}
+                >
+                  Add Room
+                </Link>
+
+                <button
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-2 px-3 py-2 mt-2 text-red-400 hover:bg-white/10 rounded"
+                >
+                  <FiLogOut />
+                  Sign Out
+                </button>
+              </div>
             </>
           ) : (
             <>
@@ -148,7 +172,6 @@ export default function Navbar() {
           )}
         </div>
 
-      
         <button
           className="md:hidden text-2xl"
           onClick={() => setOpen(!open)}
@@ -157,52 +180,54 @@ export default function Navbar() {
         </button>
       </div>
 
-      {open && (
-        <div className="md:hidden mt-4 flex flex-col gap-3 bg-gray-900/90 border border-white/10 p-4 rounded-xl">
-
-          <Link href="/" onClick={() => setOpen(false)}>
-            Home
+      <div
+        className={`md:hidden mt-4 flex flex-col gap-3 bg-gray-900/90 border border-white/10 p-4 rounded-xl transition-all duration-200 ${
+          open ? "block" : "hidden"
+        }`}
+      >
+        {menuItems.map((item) => (
+          <Link
+            key={item.name}
+            href={item.path}
+            onClick={() => setOpen(false)}
+          >
+            {item.name}
           </Link>
+        ))}
 
-          <Link href="/rooms" onClick={() => setOpen(false)}>
-            Rooms
-          </Link>
+        <hr className="border-white/10" />
 
-          {user && (
-            <>
-              <Link href="/add-room" onClick={() => setOpen(false)}>
-                Add Room
-              </Link>
+        {isPending ? (
+          <span className="text-sm text-white/70">Loading...</span>
+        ) : user ? (
+          <>
+            <div className="flex items-center gap-2">
+              <FiUser className="text-yellow-300" />
+              <span>
+                Hello, {user?.name?.split(" ")[0]}
+              </span>
+            </div>
 
-              <Link href="/my-listings" onClick={() => setOpen(false)}>
-                My Listings
-              </Link>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-2 text-red-400"
+            >
+              <FiLogOut />
+              Sign Out
+            </button>
+          </>
+        ) : (
+          <>
+            <Link href="/login" onClick={() => setOpen(false)}>
+              Login
+            </Link>
 
-              <Link href="/my-bookings" onClick={() => setOpen(false)}>
-                My Bookings
-              </Link>
-            </>
-          )}
-
-          <hr className="border-white/10" />
-
-          {user ? (
-            <Button color="danger" onClick={handleSignOut}>
-              Logout
-            </Button>
-          ) : (
-            <>
-              <Link href="/login" onClick={() => setOpen(false)}>
-                Login
-              </Link>
-
-              <Link href="/register" onClick={() => setOpen(false)}>
-                Register
-              </Link>
-            </>
-          )}
-        </div>
-      )}
+            <Link href="/register" onClick={() => setOpen(false)}>
+              Register
+            </Link>
+          </>
+        )}
+      </div>
     </nav>
   );
 }

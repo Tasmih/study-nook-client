@@ -1,48 +1,43 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation"; 
 import {
-  Button,
-  Card,
-  Description,
-  FieldError,
-  Form,
-  Input,
-  Label,
-  Separator,
-  TextField,
+  Button, Card, Description, FieldError,
+  Form, Input, Label, Separator, TextField,
 } from "@heroui/react";
-
 import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
 
 const LoginPage = () => {
+  const router = useRouter();
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-
     const user = Object.fromEntries(formData.entries());
 
     const { data, error } = await authClient.signIn.email({
       email: user.email,
       password: user.password,
-      
     });
 
-    console.log(data, error);
+
 
     if (data) {
-      toast.success("Account opened successfully");
-      window.location.href = "/";
+      toast.success("Login successful!");
+     router.push("/");
+     router.refresh();
     }
 
     if (error) {
       toast.error(error?.message || "Something went wrong");
     }
   };
+
 
   const handleGoogleSignin = async () => {
     await authClient.signIn.social({
@@ -57,11 +52,11 @@ const LoginPage = () => {
 
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-yellow-300">
-            Log in to your account
+          Welcome Back
           </h1>
 
           <p className="text-white/40 mt-2 text-sm">
-            Log in  Study Nook and start booking rooms
+              Log in to your account and start booking rooms
           </p>
         </div>
 
@@ -98,7 +93,7 @@ const LoginPage = () => {
 
           <TextField
             isRequired
-            minLength={8}
+            minLength={6}
             name="password"
             type="password"
             validate={(value) => {

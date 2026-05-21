@@ -1,50 +1,73 @@
-'use client'
+import { Card } from "@heroui/react";
+import Image from "next/image";
+import Link from "next/link";
 
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import RoomCard from "@/components/RoomCard";
+const RoomsPage = async () => {
+  const res = await fetch("http://localhost:5000/room", {
+    cache: "no-store",
+  });
 
-const RoomPage = () => {
-  const [rooms, setRooms] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchRooms = async () => {
-      const res = await fetch("http://localhost:5000/room");
-      const data = await res.json();
-      setRooms(data);
-      toast.success("Rooms loaded!");
-      setLoading(false);
-    };
-
-    fetchRooms();
-  }, []);
+  const rooms = await res.json();
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
+      <div className="mb-8 text-center">
+        <h1 className="text-4xl font-bold text-[#0f172a]">
+          All Rooms
+        </h1>
 
-      <h1 className="text-3xl font-bold text-[#0f172a] mb-6">All Rooms</h1>
+        <p className="mt-2 text-gray-500">
+          Browse all available study rooms
+        </p>
+      </div>
 
-      {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-80 bg-[#f8f4ea] rounded-2xl animate-pulse" />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {rooms?.map((room) => (
+          <Card
+            key={room._id}
+            className="overflow-hidden rounded-3xl border border-[#eadfca]"
+          >
+            <div className="relative h-[220px]">
+              <Image
+                src={room.image}
+                alt={room.roomName}
+                fill
+                className="object-cover"
+              />
+            </div>
 
-      ) : rooms.length === 0 ? (
-        <p className="text-center text-gray-500">No rooms found</p>
+            <div className="p-5">
+              <h2 className="text-xl font-bold">
+                {room.roomName}
+              </h2>
 
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {rooms.map((room) => (
-            <RoomCard key={room._id} room={room} />
-          ))}
-        </div>
-      )}
+              <p className="mt-2 line-clamp-2 text-gray-600">
+                {room.description}
+              </p>
 
+              <div className="mt-4 flex justify-between text-sm">
+                <span>Floor: {room.floor}</span>
+                <span>{room.capacity} People</span>
+              </div>
+
+              <div className="mt-4">
+                <p className="font-semibold text-[#d8a84f]">
+                  ${room.hourlyRate}/hr
+                </p>
+              </div>
+
+              <Link
+                href={`/rooms/${room._id}`}
+                className="mt-5 block rounded-xl bg-[#0f172a] py-3 text-center font-semibold text-[#f5ecd7]"
+              >
+                View Details
+              </Link>
+            </div>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default RoomPage;
+export default RoomsPage;
