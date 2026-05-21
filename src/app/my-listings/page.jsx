@@ -182,7 +182,7 @@ const MyListingsPage = () => {
 >
                 <FiTrash2 size={14} />
                  Delete
-              
+               </button>
 
                 </div>
 
