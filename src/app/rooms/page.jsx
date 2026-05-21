@@ -141,7 +141,7 @@ const RoomsPage = () => {
     <div className="max-w-7xl mx-auto px-4 pt-2 pb-10">
 
       <div className="text-center mb-3">
-        <h1 className="text-2xl font-bold text-[#1a2744]">All Study Rooms</h1>
+        <h1 className="text-3xl font-bold text-[#0f172a]">All Study Rooms</h1>
         <p className="text-gray-400 mt-0.5 text-xs">find and book your perfect study space</p>
       </div>
 

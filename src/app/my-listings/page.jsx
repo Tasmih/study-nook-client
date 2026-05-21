@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { getMyRooms, deleteRoom } from "@/lib/action";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
 const MyListingsPage = () => {
   const { data: session } = authClient.useSession();
@@ -65,12 +66,12 @@ const MyListingsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-yellow-50 px-4 py-12">
       <div className="max-w-7xl mx-auto">
 
         
-        <div className="mb-10">
-          <h1 className="text-4xl font-extrabold text-slate-800">
+        <div className="mb-6 flex flex-col items-center text-center">
+          <h1 className="text-3xl font-bold text-[#0f172a]">
             My Listings
           </h1>
           <p className="mt-2 text-slate-500">
@@ -168,20 +169,20 @@ const MyListingsPage = () => {
                 <div className="mt-5 flex gap-2">
 
                   <button
-                    onClick={() =>
-                      router.push(`/rooms/${room._id}/edit`)
-                    }
-                    className="flex-1 bg-slate-900 text-white py-2 rounded-lg hover:bg-slate-800 transition"
-                  >
+                      onClick={() => router.push(`/rooms/${room._id}/edit`)}
+                      className="flex-1 flex items-center justify-center gap-1.5 bg-slate-900 text-white py-2 rounded-lg hover:bg-slate-800 transition"
+>
+                   <FiEdit2 size={14} />
                     Edit
-                  </button>
+                    </button>
 
                   <button
-                    onClick={() => handleDelete(room._id)}
-                    className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
-                  >
-                    Delete
-                  </button>
+               onClick={() => handleDelete(room._id)}
+               className="flex-1 flex items-center justify-center gap-1.5 bg-red-400 text-white py-2 rounded-lg hover:bg-red-700 transition"
+>
+                <FiTrash2 size={14} />
+                 Delete
+               </button>
 
                 </div>
 
