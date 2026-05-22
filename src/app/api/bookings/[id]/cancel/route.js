@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
@@ -12,7 +11,6 @@ export async function PATCH(req, { params }) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/bookings/${params.id}/cancel`,
       {
