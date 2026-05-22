@@ -23,7 +23,7 @@ const RoomDetailsPage = async ({ params }) => {
     );
   }
 
-  const res = await fetch(`http://localhost:5000/room/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room/${id}`, {
     cache: "no-store",
     headers: {
       authorization: `Bearer ${token}`,

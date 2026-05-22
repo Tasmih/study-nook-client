@@ -17,7 +17,7 @@ const AdminRoomsPage = () => {
   const fetchRooms = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/room", { cache: "no-store" });
+      const res = await fetch(`{process.env.NEXT_PUBLIC_SERVER_URL}/room`, { cache: "no-store" });
       const data = await res.json();
       setRooms(data);
     } catch {

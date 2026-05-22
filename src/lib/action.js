@@ -16,7 +16,7 @@ export const bookRoom = async (roomId, formData) => {
     specialNote: booking.specialNote || "",
   };
 
-  const res = await fetch("http://localhost:5000/bookings", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/bookings`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export const bookRoom = async (roomId, formData) => {
 
 export const getMyRooms = async (userId) => {
   const res = await fetch(
-    `http://localhost:5000/room?owner=${userId}`
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/room?owner=${userId}`
   );
 
   const data = await res.json();
@@ -52,7 +52,7 @@ export const deleteRoom = async (roomId, userId) => {
   const { data: tokenData } = await authClient.token();
 
   const res = await fetch(
-    `http://localhost:5000/room/${roomId}`,
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/room/${roomId}`,
     {
       method: "DELETE",
       headers: {

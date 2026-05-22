@@ -117,7 +117,7 @@ const RoomsPage = () => {
     if (activeMin) query.append("min", activeMin);
     if (activeMax) query.append("max", activeMax);
     try {
-      const res = await fetch(`http://localhost:5000/room?${query.toString()}`, { cache: "no-store" });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room?${query.toString()}`, { cache: "no-store" });
       const data = await res.json();
       setRooms(data);
     } catch {

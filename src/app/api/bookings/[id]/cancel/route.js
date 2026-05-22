@@ -1,55 +1,33 @@
 import { ObjectId } from "mongodb";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import clientPromise from "@/lib/mongodb";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function PATCH(req, { params }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
     if (!session?.user) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const client = await clientPromise;
-    const db = client.db("your-db");
-
-    const booking = await db.collection("bookings").findOne({
-      _id: new ObjectId(params.id),
-      userId: session.user.id,
-    });
-
-    if (!booking) {
-      return Response.json(
-        { message: "Booking not found" },
-        { status: 404 }
-      );
-    }
-
-    await db.collection("bookings").updateOne(
-      { _id: new ObjectId(params.id) },
-      { $set: { status: "cancelled" } }
+    
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/bookings/${params.id}/cancel`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.token}`,
+        },
+      }
     );
 
-    await db.collection("users").updateOne(
-      { _id: new ObjectId(session.user.id) },
-      { $pull: { bookings: params.id } }
-    );
-
-    await db.collection("rooms").updateOne(
-      { _id: new ObjectId(booking.roomId) },
-      { $inc: { bookingCount: -1 } }
-    );
-
-    return Response.json({
-      success: true,
-      message: "Booking cancelled",
-    });
+    const data = await response.json();
+    return Response.json(data);
 
   } catch (err) {
-    return Response.json(
-      { message: err.message },
-      { status: 500 }
-    );
+    return Response.json({ message: err.message }, { status: 500 });
   }
 }

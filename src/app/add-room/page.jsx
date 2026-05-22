@@ -36,7 +36,7 @@ export default function AddRoomPage() {
         amenities: formData.getAll("amenities"),
       };
 
-      const res = await fetch("http://localhost:5000/room", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
