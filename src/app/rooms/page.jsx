@@ -105,27 +105,28 @@ const RoomsPage = () => {
     document.title = "StudyNook - Available Rooms";
   }, []);
 
-  const fetchRooms = async (overrides = {}) => {
-    setLoading(true);
-    const activeSearch = overrides.search ?? search;
-    const activeAmenities = overrides.amenities ?? selectedAmenities;
-    const activeMin = overrides.min ?? min;
-    const activeMax = overrides.max ?? max;
-    const query = new URLSearchParams();
-    if (activeSearch) query.append("search", activeSearch);
-    if (activeAmenities.length > 0) query.append("amenities", activeAmenities.join(","));
-    if (activeMin) query.append("min", activeMin);
-    if (activeMax) query.append("max", activeMax);
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room?${query.toString()}`, { cache: "no-store" });
-      const data = await res.json();
-      setRooms(data);
-    } catch {
-      setRooms([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+ const fetchRooms = async (overrides = {}) => {
+  setLoading(true);
+  const activeSearch = overrides.search ?? search;
+  const activeAmenities = overrides.amenities ?? selectedAmenities;
+  const activeMin = overrides.min ?? min;
+  const activeMax = overrides.max ?? max;
+  const query = new URLSearchParams();
+  if (activeSearch) query.append("search", activeSearch);
+  if (activeAmenities.length > 0) query.append("amenities", activeAmenities.join(","));
+  if (activeMin !== undefined && activeMin !== null && activeMin !== "") query.append("min", Number(activeMin));
+  if (activeMax !== undefined && activeMax !== null && activeMax !== "") query.append("max", Number(activeMax));
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room?${query.toString()}`, { cache: "no-store" });
+    const data = await res.json();
+    setRooms(data);
+  } catch (err) {
+    console.error("fetchRooms failed:", err);
+    setRooms([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => { fetchRooms(); }, []);
 
