@@ -17,34 +17,38 @@ import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const RegisterPage = () => {
-  const onSubmit = async (e) => {
-    e.preventDefault();
+ const onSubmit = async (e) => {
+  e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
+  const formData = new FormData(e.currentTarget);
+  const user = Object.fromEntries(formData.entries());
 
-    const user = Object.fromEntries(formData.entries());
+  const { data, error } = await authClient.signUp.email({
+    email: user.email,
+    password: user.password,
+    name: user.name,
+    image: user.image,
+  });
 
-    const { data, error } = await authClient.signUp.email({
-      email: user.email,
-      password: user.password,
-      name: user.name,
-      image: user.image,
+  console.log(data, error);
+
+  if (data) {
+    toast.success("Account created successfully", {
+      icon: <FaCheckCircle />,
     });
 
-    console.log(data, error);
+    window.location.href = "/";
+  }
 
-    if (data) {
-      toast.success("Account opened successfully");
-      window.location.href = "/";
-    }
-
-    if (error) {
-      toast.error(error?.message || "Something went wrong");
-    }
-  };
-
+  if (error) {
+    toast.error(error?.message || "Registration failed", {
+      icon: <FaTimesCircle/>,
+    });
+  }
+};
   const handleGoogleSignin = async () => {
     await authClient.signIn.social({
       provider: "google",

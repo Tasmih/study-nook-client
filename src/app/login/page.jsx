@@ -1,30 +1,37 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import {
-  Button, Card, Description, FieldError,
-  Form, Input, Label, Separator, TextField,
+  Button,
+  Card,
+  Description,
+  FieldError,
+  Form,
+  Input,
+  Label,
+  Separator,
+  TextField,
 } from "@heroui/react";
-import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
-import { useEffect } from "react";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
-
- 
-
- 
 const LoginPage = () => {
-  useEffect(() => {
- document.title = "StudyNook - Login";
-}, []);
- 
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    document.title = "StudyNook - Login";
+  }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return;
+
+    setLoading(true);
 
     const formData = new FormData(e.currentTarget);
     const user = Object.fromEntries(formData.entries());
@@ -34,19 +41,25 @@ const LoginPage = () => {
       password: user.password,
     });
 
-
-
     if (data) {
-      toast.success("Login successful!");
-     router.push("/");
-     router.refresh();
+      toast.success("Login successful!", {
+        icon: <FaCheckCircle />,
+      });
+
+      setTimeout(() => {
+        router.push("/");
+        router.refresh();
+      }, 800);
     }
 
     if (error) {
-      toast.error(error?.message || "Something went wrong");
+      toast.error(error?.message || "Something went wrong", {
+        icon: <FaTimesCircle />,
+      });
     }
-  };
 
+    setLoading(false);
+  };
 
   const handleGoogleSignin = async () => {
     await authClient.signIn.social({
@@ -55,25 +68,19 @@ const LoginPage = () => {
   };
 
   return (
-       <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-gradient-to-br from-[#070b18] via-[#0f172a] to-black">
-
+    <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-gradient-to-br from-[#070b18] via-[#0f172a] to-black">
       <Card className="w-full max-w-md rounded-3xl bg-[rgba(10,20,45,0.92)] backdrop-blur-xl border border-yellow-500/20 shadow-[0_10px_48px_rgba(0,0,0,0.6)] p-6 sm:p-8">
-
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-yellow-300">
-          Welcome Back
+            Welcome Back
           </h1>
 
           <p className="text-white/40 mt-2 text-sm">
-              Log in to your account and start booking rooms
+            Log in to your account and start booking rooms
           </p>
         </div>
 
-        <Form
-          onSubmit={onSubmit}
-          className="flex flex-col gap-5 w-full"
-        >
-
+        <Form onSubmit={onSubmit} className="flex flex-col gap-5 w-full">
           <TextField
             isRequired
             name="email"
@@ -84,13 +91,10 @@ const LoginPage = () => {
               ) {
                 return "Please enter a valid email address";
               }
-
               return null;
             }}
           >
-            <Label className="text-white/70">
-              Email
-            </Label>
+            <Label className="text-white/70">Email</Label>
 
             <Input
               placeholder="john@example.com"
@@ -109,21 +113,16 @@ const LoginPage = () => {
               if (value.length < 6) {
                 return "Password must be at least 6 characters";
               }
-
               if (!/[A-Z]/.test(value)) {
                 return "Password must contain at least one uppercase letter";
               }
-
               if (!/[0-9]/.test(value)) {
                 return "Password must contain at least one number";
               }
-
               return null;
             }}
           >
-            <Label className="text-white/70">
-              Password
-            </Label>
+            <Label className="text-white/70">Password</Label>
 
             <Input
               placeholder="Enter your password"
@@ -140,8 +139,9 @@ const LoginPage = () => {
           <Button
             className="w-full h-12 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-[#0a0f1e] font-bold hover:scale-[1.02] transition-all duration-300"
             type="submit"
+            disabled={loading}
           >
-          Login
+            {loading ? "Logging in..." : "Login"}
           </Button>
         </Form>
 
@@ -162,11 +162,9 @@ const LoginPage = () => {
           <FcGoogle size={22} />
           Sign in with Google
         </Button>
-    
       </Card>
     </div>
   );
 };
-
 
 export default LoginPage;

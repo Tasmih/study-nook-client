@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { FiLogOut, FiUser } from "react-icons/fi";
+import { FaCheckCircle } from "react-icons/fa";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -32,12 +33,18 @@ export default function Navbar() {
   const menuItems = user ? privateMenuItems : publicMenuItems;
 
   const handleSignOut = async () => {
-    await authClient.signOut();
-    setProfileOpen(false);
-    setOpen(false);
-    router.push("/login");
-    router.refresh();
-  };
+  await authClient.signOut();
+
+  setProfileOpen(false);
+  setOpen(false);
+
+  toast.success("Logged out successfully", {
+    icon: <FaCheckCircle />,
+  });
+
+  router.push("/login");
+  router.refresh();
+};
 
   useEffect(() => {
     const handleClickOutside = (e) => {

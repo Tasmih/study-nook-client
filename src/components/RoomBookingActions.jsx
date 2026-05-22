@@ -6,8 +6,9 @@ import { Button } from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
+import { FaArrowAltCircleRight, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { FaArrowAltCircleRight } from "react-icons/fa";
+
 
 const RoomBookingAction = ({ room, roomId }) => {
   const { data: session, isPending } = authClient.useSession();
@@ -60,32 +61,33 @@ const RoomBookingAction = ({ room, roomId }) => {
   }, [startTime, endTime, room?.hourlyRate]);
 
   const handleBooking = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
+  const formData = new FormData(e.currentTarget);
 
-    try {
-      const data = await bookRoom(roomId, formData);
+  try {
+    const data = await bookRoom(roomId, formData);
 
-      if (data?.insertedId || data?.acknowledged) {
-        toast.success("Room booked successfully!");
-        setShowForm(false);
-        setStartTime("");
-        setEndTime("");
-        router.refresh();
-      }
-    } catch (error) {
-      toast.error(error?.message || "Booking failed");
+    if (data?.insertedId || data?.acknowledged) {
+      toast.success("Room booked successfully", {
+        icon: <FaCheckCircle />,
+      });
+
+      setShowForm(false);
+      setStartTime("");
+      setEndTime("");
+      router.refresh();
+    } else {
+      toast.error("Booking failed", {
+        icon: <FaTimesCircle />,
+      });
     }
-  };
-
-  if (isPending) {
-    return (
-      <p className="text-sm font-medium text-gray-500">
-        Checking login status...
-      </p>
-    );
+  } catch (error) {
+    toast.error(error?.message || "Booking failed", {
+      icon: <FaTimesCircle />,
+    });
   }
+};
 
   return (
     <div className="w-full ">
@@ -120,7 +122,6 @@ const RoomBookingAction = ({ room, roomId }) => {
             </p>
           </div>
 
-          {/* Hidden fields */}
           <input type="hidden" name="roomId" value={roomId} />
           <input type="hidden" name="roomName" value={room?.roomName || ""} />
           <input type="hidden" name="roomImage" value={room?.image || ""} />

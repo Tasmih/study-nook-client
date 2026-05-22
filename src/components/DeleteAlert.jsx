@@ -2,8 +2,9 @@
 
 import { AlertDialog, Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
-import { FaTrash } from "react-icons/fa";
-import { authClient } from "@/lib/auth-client"; 
+import { FaTrash, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 
 export function DeleteAlert({ room }) {
   const router = useRouter();
@@ -13,24 +14,31 @@ export function DeleteAlert({ room }) {
     try {
       const { data: tokenData } = await authClient.token();
 
-      const res = await fetch(
-        `http://localhost:5000/room/${_id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "content-type": "application/json",
-            authorization: `Bearer ${tokenData.token}`,
-          },
-        }
-      );
+      const res = await fetch(`http://localhost:5000/room/${_id}`, {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${tokenData.token}`,
+        },
+      });
 
       const data = await res.json();
 
-      console.log(data);
+      if (res.ok) {
+        toast.success("Room deleted successfully", {
+          icon: <FaCheckCircle />,
+        });
 
-      router.push("/rooms");
+        router.push("/rooms");
+      } else {
+        toast.error(data.message || "Delete failed", {
+          icon: <FaTimesCircle />,
+        });
+      }
     } catch (err) {
-      console.error("Delete failed:", err);
+      toast.error(err.message || "Server error", {
+        icon: <FaTimesCircle />,
+      });
     }
   };
 
@@ -58,8 +66,8 @@ export function DeleteAlert({ room }) {
 
             <AlertDialog.Body>
               <p className="text-gray-800">
-                This will permanently delete <strong>{roomName}</strong> and all of its data.
-                This action cannot be undone.
+                This will permanently delete <strong>{roomName}</strong> and all
+                of its data. This action cannot be undone.
               </p>
             </AlertDialog.Body>
 
@@ -72,7 +80,6 @@ export function DeleteAlert({ room }) {
                 Delete Room
               </Button>
             </AlertDialog.Footer>
-
           </AlertDialog.Dialog>
         </AlertDialog.Container>
       </AlertDialog.Backdrop>

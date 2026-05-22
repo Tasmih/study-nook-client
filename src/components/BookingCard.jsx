@@ -3,6 +3,7 @@
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { FaTimesCircle } from "react-icons/fa";
 
 export default function BookingCard({ booking }) {
   const [loading, setLoading] = useState(false);
@@ -11,27 +12,33 @@ const handleCancel = async () => {
   setLoading(true);
 
   try {
-    const { data: tokenData } = await authClient.token(); 
+    const { data: tokenData } = await authClient.token();
 
     const res = await fetch(
-      `http://localhost:5000/bookings/${booking._id}/cancel`, 
+      `http://localhost:5000/bookings/${booking._id}/cancel`,
       {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
-          authorization: `Bearer ${tokenData ?.token}`,
+          authorization: `Bearer ${tokenData?.token}`,
         },
       }
     );
 
     const data = await res.json();
+
     if (!res.ok) throw new Error(data.message);
 
-    toast.success("Booking cancelled");
+    toast.success("Booking cancelled", {
+      icon: <FaCheckCircle />,
+    });
+
     window.location.reload();
 
   } catch (err) {
-    toast.error(err.message);
+    toast.error(err.message, {
+      icon: <FaTimesCircle />,
+    });
   } finally {
     setLoading(false);
   }
