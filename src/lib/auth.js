@@ -10,6 +10,10 @@ const client = new MongoClient(process.env.MONGODB_URI || "mongodb://localhost:2
 const db = client.db("studynook");
 
 export const auth = betterAuth({
+  trustedOrigins: [
+    "https://study-nook-client-three.vercel.app", 
+    "http://localhost:3000"
+  ],
   database: mongodbAdapter(db, {
     client,
     transaction: false,
