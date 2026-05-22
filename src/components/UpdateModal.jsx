@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button, Input, Label, Modal, Surface } from "@heroui/react";
 import { FaCheckCircle, FaEdit, FaTimesCircle } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
@@ -9,6 +10,7 @@ import { toast } from "react-toastify";
 export function UpdateModal({ room }) {
   const [open, setOpen] = useState(false);
   const formRef = useRef(null);
+  const router = useRouter();
   const { data: session } = authClient.useSession();
 
   const {
@@ -26,10 +28,9 @@ export function UpdateModal({ room }) {
     e.preventDefault();
 
     try {
-      const jwtData = await authClient.jwt.getToken();
-      const token = jwtData?.data?.token;
+      const { data: tokenData } = await authClient.token();
 
-      if (!token) {
+      if (!tokenData?.token) {
         toast.error("Unauthorized user", {
           icon: <FaTimesCircle />,
         });
@@ -52,7 +53,7 @@ export function UpdateModal({ room }) {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
-          authorization: `Bearer ${token}`,
+          authorization: `Bearer ${tokenData.token}`,
         },
         body: JSON.stringify(roomData),
       });
@@ -64,6 +65,7 @@ export function UpdateModal({ room }) {
           icon: <FaCheckCircle />,
         });
         setOpen(false);
+        router.refresh();
       } else {
         toast.error(resData.message || "Update failed", {
           icon: <FaTimesCircle />,
@@ -166,12 +168,12 @@ export function UpdateModal({ room }) {
                     </div>
                   </div>
 
-                  <Button
+                  <button
                     type="submit"
                     className="w-full bg-yellow-500 text-black font-semibold py-3 rounded-xl hover:bg-yellow-400 transition"
                   >
                     Update Room
-                  </Button>
+                  </button>
                 </form>
               </Surface>
             </Modal.Body>
