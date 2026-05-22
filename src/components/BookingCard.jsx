@@ -3,7 +3,7 @@
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { FaTimesCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 export default function BookingCard({ booking }) {
   const [loading, setLoading] = useState(false);
@@ -53,12 +53,12 @@ const handleCancel = async () => {
       </div>
 
       <button
-        onClick={handleCancel}
-        disabled={loading}
-        className="bg-red-500 text-white px-3 py-1 rounded"
-      >
-        {loading ? "Cancelling..." : "Cancel"}
-      </button>
+  onClick={handleCancel}
+  disabled={loading || booking.status === "cancelled"}
+  className="bg-red-500 text-white px-3 py-1 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+>
+  {loading ? "Cancelling..." : "Cancel"}
+</button>
     </div>
   );
 }

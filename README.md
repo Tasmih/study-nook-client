@@ -1,7 +1,7 @@
 Study-Nook
 Study-Nook is a full-stack room booking platform where users can explore available study rooms, view room details, book rooms for specific time slots, manage their own listings, and track their bookings. The application includes secure authentication, protected booking actions, owner-based room management, and search functionality by room name.
 
-Live Links
+Live Links : https://study-nook-client-three.vercel.app
 
 
 Project Purpose

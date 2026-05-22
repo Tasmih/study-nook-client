@@ -97,6 +97,7 @@ export default function BookingModal({ room, user, onClose }) {
       }
 
       toast.success("Room booked successfully!");
+      alert("room booking done")
       onClose();
     } catch {
       toast.error("Something went wrong. Try again.");

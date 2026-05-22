@@ -46,8 +46,6 @@ const RoomDetailsPage = async ({ params }) => {
       <div className="container mx-auto px-4">
         <Card className="overflow-hidden rounded-3xl border border-yellow-500/20 bg-[rgba(10,20,45,0.92)] backdrop-blur-xl shadow-[0_10px_48px_rgba(0,0,0,0.6)]">
           <div className="grid grid-cols-1 lg:grid-cols-2">
-
-    
             <div className="relative h-[320px] sm:h-[420px] lg:h-full min-h-[550px] overflow-hidden">
               <Image
                 src={image || "/placeholder.jpg"}
@@ -61,9 +59,7 @@ const RoomDetailsPage = async ({ params }) => {
               </div>
             </div>
 
-        
             <div className="flex flex-col p-6 md:p-10">
-
               <p className="mb-3 w-fit rounded-full border border-[#d8c08c]/30 bg-[#d8c08c]/10 px-4 py-1 text-sm font-medium text-[#d8c08c]">
                 Premium Study Space
               </p>
@@ -72,11 +68,8 @@ const RoomDetailsPage = async ({ params }) => {
                 {roomName}
               </h2>
 
-              <p className="mt-5 leading-7 text-white/60">
-                {description}
-              </p>
+              <p className="mt-5 leading-7 text-white/60">{description}</p>
 
-        
               <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div className="rounded-2xl border border-yellow-500/20 bg-white/5 p-4">
                   <p className="text-sm text-white/40">Floor</p>
@@ -92,7 +85,6 @@ const RoomDetailsPage = async ({ params }) => {
                 </div>
               </div>
 
-   
               <div className="mt-8">
                 <h3 className="text-xl font-semibold text-[#f5ecd7]">Amenities</h3>
                 <div className="mt-4 flex flex-wrap gap-3">
@@ -107,13 +99,6 @@ const RoomDetailsPage = async ({ params }) => {
                 </div>
               </div>
 
-              
-              <div className="mt-8 flex flex-wrap gap-4">
-                <UpdateModal room={room} />
-                <DeleteAlert room={room} />
-              </div>
-
-         
               <div className="mt-10 rounded-3xl border border-yellow-500/20 bg-white/5 p-6">
                 <h3 className="text-xl font-semibold text-[#f5ecd7]">
                   Interested in this study room?
@@ -128,7 +113,6 @@ const RoomDetailsPage = async ({ params }) => {
                 </div>
               </div>
 
-             
               <div className="mt-6">
                 <Link
                   href="/rooms"
@@ -139,6 +123,10 @@ const RoomDetailsPage = async ({ params }) => {
                 </Link>
               </div>
 
+              <div className="mt-8 flex flex-wrap gap-4">
+                <UpdateModal room={room} />
+                <DeleteAlert room={room} />
+              </div>
             </div>
           </div>
         </Card>

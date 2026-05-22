@@ -17,7 +17,7 @@ const AdminRoomsPage = () => {
   const fetchRooms = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`{process.env.NEXT_PUBLIC_SERVER_URL}/room`, { cache: "no-store" });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room`, { cache: "no-store" });
       const data = await res.json();
       setRooms(data);
     } catch {
@@ -33,9 +33,12 @@ const AdminRoomsPage = () => {
 
         <div className="text-center mb-8">
           <h1 className="text-4xl sm:text-5xl font-semibold text-[#f5ecd7]">
-            Room <span className="text-[#d8c08c] italic">Management</span>
-          </h1>
-          <p className="text-white/40 mt-2 text-sm">manage your study rooms, capacity, floor and hourly rate</p>
+  Manage Your <span className="text-[#d8c08c] italic">Spaces</span>
+</h1>
+
+<p className="text-white/40 mt-2 text-sm">
+  Track room information, capacity, pricing, and bookings efficiently
+</p>
         </div>
 
         {loading && (
